@@ -1,7 +1,6 @@
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.stream.*;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.maxBy;
@@ -10,13 +9,20 @@ import static java.util.stream.Collectors.maxBy;
 public class StreamEx {
 
     public static void main(String[] args) {
-        //allMatch_anyMatch_noneMatch_test();
-        // builder_test();
+        stream_test();
+        allMatch_anyMatch_noneMatch_test();
+        builder_test();
         collect_test();
         concat_test();
         count_test();
         distinct_test();
         empty_test();
+        filter_test();
+        findAny_findFirst_test();
+        flatMap_test();
+        flatMapToDouble_test();
+        flatMapToInt_test();
+        flatMapToLong_test();
 
         //>>>>>>
         //iterate
@@ -36,18 +42,18 @@ public class StreamEx {
         //  IntStream intStream = IntStream.of(1, 2, 2, 3, 3, 3, 4, 5, 5, 6);
         // intStream.distinct().forEach(System.out::println);
 
-        //filter
-        //IntStream intStream2 = IntStream.rangeClosed(1, 10);
-        //intStream2.filter(i -> i % 2 == 0).forEach(System.out::println);
+        // filter
+        // IntStream intStream2 = IntStream.rangeClosed(1, 10);
+        // intStream2.filter(i -> i % 2 == 0).forEach(System.out::println);
     }
 
-    public void stream_test() {
+    //1
+    public static void stream_test() {
         Stream<Integer> evenStream = Stream.iterate(0, n -> n + 2);
         System.out.println(evenStream);
-
-
     }
 
+    //2
     private static void allMatch_anyMatch_noneMatch_test() {
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
 
@@ -65,7 +71,7 @@ public class StreamEx {
         System.out.println();
     }
 
-
+    //3
     private static void builder_test() {
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
         // 스트림에 대한 빌더를 반환합니다.
@@ -79,6 +85,7 @@ public class StreamEx {
         System.out.println();
     }
 
+    //4
     private static void collect_test() { //https://www.baeldung.com/java-8-collectors
         //Collector를 사용하여 이 스트림의 요소에 대해 변경 가능한 축소 작업을 수행합니다.
 
@@ -131,7 +138,7 @@ public class StreamEx {
         System.out.println("result: " + result6.orElse("no item"));
 
         //Collectors로 평균 값 구하기
-        System.out.println("//Collectors로 평균 값 구하기");
+        System.out.println("// Collectors로 평균 값 구하기");
         List<Integer> list = Arrays.asList(1, 2, 3, 4);
         Double avg_result = list.stream().collect(Collectors.averagingInt(v -> v * 2));
         System.out.println("Average: " + avg_result);
@@ -181,6 +188,7 @@ public class StreamEx {
         System.out.println();
     }
 
+    //5
     private static void concat_test() {
         //첫 번째 스트림의 모든 요소와 두 번째 스트림의 모든 요소가 뒤따르는 지연 연결된 스트림을 만듭니다.
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -195,35 +203,7 @@ public class StreamEx {
         System.out.println();
     }
 
-    private static void count_test() {
-        //이 스트림의 요소 수를 반환합니다.
-        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
-        List<String> words = Arrays.asList("book", "desk", "keyboard", "mouse", "cup");
-        int count = (int) words.stream().filter(w -> w.contains("o")).count();
-        System.out.println("count >" + count);
-        System.out.println();
-    }
-
-    private static void distinct_test() {
-        //이 스트림의 고유한 요소(Object.equals(Object)에 따라)로 구성된 스트림을 반환합니다.
-        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
-        List<String> strings =
-                Arrays.asList("google", "apple", "google", "apple", "samsung");
-        Stream<String> stream1 = strings.stream();
-        Stream<String> stream2 = stream1.distinct();
-        stream2.forEach(System.out::println);
-        System.out.println();
-    }
-
-    private static void empty_test() {
-        //Stream.empty()는 비어있는 스트림을 생성합니다.
-        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
-        Stream<String> stream = Stream.empty();
-        System.out.println("stream");
-        stream.forEach(s -> System.out.println(s));
-    }
-
-
+    //xx
     static class Fruit {
         public String id;
         public String name;
@@ -242,5 +222,163 @@ public class StreamEx {
         }
     }
 
+    //6
+    private static void count_test() {
+        //이 스트림의 요소 수를 반환합니다.
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+        List<String> words = Arrays.asList("book", "desk", "keyboard", "mouse", "cup");
+        int count = (int) words.stream().filter(w -> w.contains("o")).count();
+        System.out.println("count >" + count);
+        System.out.println();
+    }
+
+    //7
+    private static void distinct_test() {
+        //이 스트림의 고유한 요소(Object.equals(Object)에 따라)로 구성된 스트림을 반환합니다.
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+        List<String> strings =
+                Arrays.asList("google", "apple", "google", "apple", "samsung");
+        Stream<String> stream1 = strings.stream();
+        Stream<String> stream2 = stream1.distinct();
+        stream2.forEach(System.out::println);
+        System.out.println();
+    }
+
+    //8
+    private static void empty_test() {
+        //Stream.empty()는 비어있는 스트림을 생성합니다.
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+        Stream<String> stream = Stream.empty();
+        System.out.println("stream");
+        stream.forEach(System.out::println);
+        System.out.println();
+    }
+
+    //9
+    private static void filter_test() {
+        //주어진 술어와 일치하는 이 스트림의 요소로 구성된 스트림을 리턴합니다.
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+        List<String> list =
+                Arrays.asList("a1", "a2", "b1", "b2", "c2", "c1", "c3");
+        Stream<String> stream1 = list.stream();
+        Stream<String> filtered = stream1.filter(s -> s.startsWith("c"));
+        filtered.forEach(System.out::println);
+        System.out.println();
+    }
+
+    //10
+    private static void findAny_findFirst_test() {
+        //스트림의 일부 요소를 설명하는 Optional을 반환하거나 스트림이 비어 있으면 빈 Optional을 반환합니다.
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+        List<String> elements = Arrays.asList("a", "a1", "b", "b1", "b2", "c", "c1");
+        System.out.println("elements: " + elements);
+
+        //findAny
+        Optional<String> anyElement = elements.stream()
+                .filter(s -> s.startsWith("b")).findAny();
+        System.out.println("findAny: " + anyElement.get());
+
+        //findFirst
+        Optional<String> firstElement = elements.stream()
+                .filter(s -> s.startsWith("b")).findFirst();
+        System.out.println("findFirst: " + firstElement.get());
+
+        //findFirst() vs findAny()
+        //Stream을 직렬로 처리할 때 findFirst()와 findAny()는 동일한 요소를 리턴하며, 차이점이 없습니다.
+        //하지만 Stream을 병렬로 처리할 때는 차이가 있습니다.
+        //findFirst()는 여러 요소가 조건에 부합해도 Stream의 순서를 고려하여 가장 앞에 있는 요소를 리턴합니다.
+        //반면에 findAny()는 Multi thread에서 Stream을 처리할 때 가장 먼저 찾은 요소를 리턴합니다. 따라서 Stream의 뒤쪽에 있는 element가 리턴될 수 있습니다.
+
+        //아래 코드는 Stream을 병렬(parallel())로 처리할 때, findFirst()를 사용하는 예제입니다. 여기서 findFirst()는 항상 b를 리턴합니다.
+        //findFirst-parallel()
+        Optional<String> firstElement2 = elements.stream().parallel()
+                .filter(s -> s.startsWith("b")).findFirst();
+        System.out.println("findFirst2: parallel(): " + firstElement2.get());
+
+        //아래 코드는 Stream을 병렬로 처리할 때, findAny()를 사용하는 예제입니다. 여기서 findAny()는 실행할 때마다 리턴 값이 달라지며, b1 또는 b를 리턴합니다.
+        //findAny-parallel()
+        Optional<String> anyElement2 = elements.stream().parallel()
+                .filter(s -> s.startsWith("b")).findAny();
+        System.out.println("findAny2: parallel(): " + anyElement2.get());
+        System.out.println();
+    }
+
+    //11
+    private static void flatMap_test() {
+        //이 스트림의 각 요소를 각 요소에 제공된 매핑 기능을 적용하여 생성된 매핑된 스트림의 내용으로 대체한 결과로 구성된 스트림을 반환합니다.
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+        String[][] arrays = new String[][]{{"a1", "a2"}, {"b1", "b2"}, {"c1", "c2", "c3"}};
+        Stream<String[]> stream4 = Arrays.stream(arrays);
+        Stream<String> stream5 = stream4.flatMap(s -> Arrays.stream(s));
+        stream5.forEach(System.out::println);
+        System.out.println();
+    }
+
+    //12
+    private static void flatMapToDouble_test() {
+        //이 스트림의 각 요소를 각 요소에 제공된 매핑 함수를 적용하여 생성된 매핑된 스트림의 내용으로 대체한 결과로 구성된 DoubleStream을 반환합니다.
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+        //ex1
+        System.out.println("ex1 flatMapToDouble_test");
+        List<String> list = Arrays.asList("1.5", "2.7", "3", "4", "5.6");
+        list.stream().flatMapToDouble(num
+                -> DoubleStream.of(Double.parseDouble(num)))
+                .forEach(System.out::println);
+        //ex2
+        System.out.println("ex2 flatMapToDouble_test");
+        List<String> list2 = Arrays.asList("Geeks", "GFG",
+                "GeeksforGeeks", "gfg");
+        list2.stream().flatMapToDouble(str
+                -> DoubleStream.of(str.length()))
+                .forEach(System.out::println);
+        System.out.println();
+    }
+
+    //13
+    private static void flatMapToInt_test() {
+        //이 스트림의 각 요소를 각 요소에 제공된 매핑 함수를 적용하여 생성된 매핑된 스트림의 내용으로 대체한 결과로 구성된 IntStream을 반환합니다.
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+        //ex1
+        System.out.println("ex1 flatMapToInt_test");
+        List<String> list = Arrays.asList("1", "2", "3", "4", "5");
+        list.stream().flatMapToInt(num
+                -> IntStream.of(Integer.parseInt(num)))
+                .forEach(System.out::println);
+        //ex2
+        System.out.println("ex2 flatMapToInt_test");
+        List<String> list2 = Arrays.asList("Geeks", "GFG", "GeeksforGeeks", "gfg");
+        list2.stream().flatMapToInt(str
+                -> IntStream.of(str.length()))
+                .forEach(System.out::println);
+        System.out.println();
+    }
+
+    //14
+    private static void flatMapToLong_test() {
+        //이 스트림의 각 요소를 각 요소에 제공된 매핑 기능을 적용하여 생성된 매핑된 스트림의 내용으로 대체한 결과로 구성된 LongStream을 반환합니다.
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+        //ex1
+        System.out.println("ex1 flatMapToLong_test");
+        List<String> list = Arrays.asList("1", "2", "3", "4", "5");
+        list.stream().flatMapToLong(num ->
+                LongStream.of(Long.parseLong(num))).
+                forEach(System.out::println);
+        //ex2
+        System.out.println("ex2 flatMapToLong_test");
+        List<String> list2 = Arrays.asList("Geeks", "GFG",
+                "GeeksforGeeks", "gfg");
+        list2.stream().flatMapToLong(str ->
+                LongStream.of(str.length())).
+                forEach(System.out::println);
+        System.out.println();
+    }
+
+    private static void test() {
+        //
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
+
+        System.out.println();
+    }
 
 }
