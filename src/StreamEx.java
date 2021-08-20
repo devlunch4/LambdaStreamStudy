@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.*;
 
@@ -23,6 +24,9 @@ public class StreamEx {
         flatMapToDouble_test();
         flatMapToInt_test();
         flatMapToLong_test();
+        forEach_test();
+        forEachOrdered_test();
+        generate_test();
 
         //>>>>>>
         //iterate
@@ -373,6 +377,64 @@ public class StreamEx {
         System.out.println();
     }
 
+    //15
+    private static void forEach_test() {
+        //이 스트림의 각 요소에 대해 작업을 수행합니다.
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+        String[] arr = {"1", "2", "3"};
+
+        System.out.print("for: ");
+        int count = 0;
+        String[] arr1 = {"Geeks", "For", "Geeks"};
+        for (String str : arr) {
+            System.out.print(arr1[count++]);
+        }
+
+        System.out.println();
+        List<String> list = Arrays.asList("A", "B", "C", "D");
+        System.out.print("stream: ");
+        list.forEach(System.out::print);
+        System.out.println();
+
+        System.out.print("parallelStream: ");
+        list.parallelStream().forEach(System.out::print);
+        System.out.println();
+        System.out.println();
+    }
+
+//16
+    private static void forEachOrdered_test() {
+        //스트림에 정의된 조우 순서가 있는 경우 스트림의 조우 순서대로 이 스트림의 각 요소에 대해 작업을 수행합니다.
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+        //ex1
+        System.out.println("ex1 forEachOrdered_test");
+        List<Integer> list = Arrays.asList(10, 19, 20, 1, 2);
+        list.stream().forEachOrdered(System.out::println);
+        System.out.println();
+
+        //ex2
+        System.out.println("ex2 forEachOrdered_test");
+        Stream<String> stream = Stream.of("GFG", "Geeks", "for", "GeeksforGeeks");
+        stream.flatMap(str -> Stream.of(str.charAt(2)))
+                .forEachOrdered(System.out::println);
+        System.out.println();
+
+    }
+
+//17
+    private static void generate_test() {
+        //제공된 공급자에 의해 각 요소가 생성되는 무한 순차 무순 스트림을 반환합니다.
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
+        System.out.println("ex1 Random()::nextInt ");
+        Stream.generate(new Random()::nextInt)
+                .limit(5).forEach(System.out::println);
+        System.out.println("ex2 Random()::nextDouble ");
+        Stream.generate(new Random()::nextDouble)
+                .limit(8).forEach(System.out::println);
+        System.out.println();
+    }
+
     private static void test() {
         //
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -380,5 +442,6 @@ public class StreamEx {
 
         System.out.println();
     }
+
 
 }
