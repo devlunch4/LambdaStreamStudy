@@ -27,6 +27,13 @@ public class StreamEx {
         forEach_test();
         forEachOrdered_test();
         generate_test();
+        iterate_test();
+        limit_test();
+        map_test();
+        mapToDouble_test();
+        mapToInt_test();
+        mapToLong_test();
+        max_min_test();
 
         //>>>>>>
         //iterate
@@ -62,16 +69,16 @@ public class StreamEx {
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
 
         int[] intArr = {2, 4, 6};
-        System.out.println("intArr: " + Arrays.toString(intArr));
+        System.out.println("//intArr: " + Arrays.toString(intArr));
         // 이 스트림의 모든 요소가 제공된 술어와 일치하는지 여부를 리턴합니다.
         boolean result = Arrays.stream(intArr).allMatch(a -> a % 2 == 0);
-        System.out.println("allMatch>>>2의 배수? " + result);
+        System.out.println("//allMatch>>>2의 배수? " + result);
         //이 스트림의 요소가 제공된 술어와 일치하는지 여부를 리턴합니다.
         result = Arrays.stream(intArr).anyMatch(a -> a % 3 == 0);
-        System.out.println("anyMatch>>>3의 배수가 하나라도 있나? " + result);
+        System.out.println("//anyMatch>>>3의 배수가 하나라도 있나? " + result);
         //이 스트림의 요소가 제공된 술어와 일치하지 않는지 여부를 반환합니다.
         result = Arrays.stream(intArr).noneMatch(a -> a % 3 == 0);
-        System.out.println("noneMatch>>>3의 배수가 없나? " + result);
+        System.out.println("//noneMatch>>>3의 배수가 없나? " + result);
         System.out.println();
     }
 
@@ -79,6 +86,7 @@ public class StreamEx {
     private static void builder_test() {
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
         // 스트림에 대한 빌더를 반환합니다.
+        System.out.println("//builder add 'A', 'B', 'C'");
         Stream<String> builderStream =
                 Stream.<String>builder()
                         .add("A")
@@ -196,6 +204,7 @@ public class StreamEx {
     private static void concat_test() {
         //첫 번째 스트림의 모든 요소와 두 번째 스트림의 모든 요소가 뒤따르는 지연 연결된 스트림을 만듭니다.
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+        System.out.println("//스트림 연결");
         List<String> numbers =
                 Arrays.asList("1", "2", "3", "4", "5");
         List<String> chars =
@@ -230,7 +239,9 @@ public class StreamEx {
     private static void count_test() {
         //이 스트림의 요소 수를 반환합니다.
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+        System.out.println("//\"o\"가 포함된 Stream의 개수를 찾습니다.");
         List<String> words = Arrays.asList("book", "desk", "keyboard", "mouse", "cup");
+        System.out.println("words: " + words);
         int count = (int) words.stream().filter(w -> w.contains("o")).count();
         System.out.println("count >" + count);
         System.out.println();
@@ -240,8 +251,10 @@ public class StreamEx {
     private static void distinct_test() {
         //이 스트림의 고유한 요소(Object.equals(Object)에 따라)로 구성된 스트림을 반환합니다.
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+        System.out.println("//중복 제거");
         List<String> strings =
                 Arrays.asList("google", "apple", "google", "apple", "samsung");
+        System.out.println("strings: " + strings);
         Stream<String> stream1 = strings.stream();
         Stream<String> stream2 = stream1.distinct();
         stream2.forEach(System.out::println);
@@ -252,6 +265,7 @@ public class StreamEx {
     private static void empty_test() {
         //Stream.empty()는 비어있는 스트림을 생성합니다.
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+        System.out.println("//Stream.empty()는 비어있는 스트림을 생성합니다.");
         Stream<String> stream = Stream.empty();
         System.out.println("stream");
         stream.forEach(System.out::println);
@@ -262,8 +276,10 @@ public class StreamEx {
     private static void filter_test() {
         //주어진 술어와 일치하는 이 스트림의 요소로 구성된 스트림을 리턴합니다.
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+        System.out.println("//c로 시작하는 문자열만 필터링하도록 조건");
         List<String> list =
                 Arrays.asList("a1", "a2", "b1", "b2", "c2", "c1", "c3");
+        System.out.println("list: " + list);
         Stream<String> stream1 = list.stream();
         Stream<String> filtered = stream1.filter(s -> s.startsWith("c"));
         filtered.forEach(System.out::println);
@@ -276,6 +292,7 @@ public class StreamEx {
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
         List<String> elements = Arrays.asList("a", "a1", "b", "b1", "b2", "c", "c1");
         System.out.println("elements: " + elements);
+        System.out.println("//스트림의 처리가 싱글스레드에서 동작하기 때문에 스트림의 첫번째 아이템부터 탐색");
 
         //findAny
         Optional<String> anyElement = elements.stream()
@@ -295,6 +312,7 @@ public class StreamEx {
 
         //아래 코드는 Stream을 병렬(parallel())로 처리할 때, findFirst()를 사용하는 예제입니다. 여기서 findFirst()는 항상 b를 리턴합니다.
         //findFirst-parallel()
+        System.out.println("//stream()에 .parallel()을 붙이면 스트림의 처리가 병렬로 동작");
         Optional<String> firstElement2 = elements.stream().parallel()
                 .filter(s -> s.startsWith("b")).findFirst();
         System.out.println("findFirst2: parallel(): " + firstElement2.get());
@@ -312,6 +330,7 @@ public class StreamEx {
         //이 스트림의 각 요소를 각 요소에 제공된 매핑 기능을 적용하여 생성된 매핑된 스트림의 내용으로 대체한 결과로 구성된 스트림을 반환합니다.
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
         String[][] arrays = new String[][]{{"a1", "a2"}, {"b1", "b2"}, {"c1", "c2", "c3"}};
+        System.out.println("//스트림의 각 요소를 각 요소에 제공된 매핑 기능을 적용하여 생성된 매핑된 스트림의 내용으로 대체");
         Stream<String[]> stream4 = Arrays.stream(arrays);
         Stream<String> stream5 = stream4.flatMap(s -> Arrays.stream(s));
         stream5.forEach(System.out::println);
@@ -325,13 +344,14 @@ public class StreamEx {
         //ex1
         System.out.println("ex1 flatMapToDouble_test");
         List<String> list = Arrays.asList("1.5", "2.7", "3", "4", "5.6");
+        System.out.println("list: " + list);
         list.stream().flatMapToDouble(num
                 -> DoubleStream.of(Double.parseDouble(num)))
                 .forEach(System.out::println);
         //ex2
         System.out.println("ex2 flatMapToDouble_test");
-        List<String> list2 = Arrays.asList("Geeks", "GFG",
-                "GeeksforGeeks", "gfg");
+        List<String> list2 = Arrays.asList("Geeks", "GFG", "GeeksforGeeks", "gfg");
+        System.out.println("list2: " + list2);
         list2.stream().flatMapToDouble(str
                 -> DoubleStream.of(str.length()))
                 .forEach(System.out::println);
@@ -345,12 +365,14 @@ public class StreamEx {
         //ex1
         System.out.println("ex1 flatMapToInt_test");
         List<String> list = Arrays.asList("1", "2", "3", "4", "5");
+        System.out.println("list: " + list);
         list.stream().flatMapToInt(num
                 -> IntStream.of(Integer.parseInt(num)))
                 .forEach(System.out::println);
         //ex2
         System.out.println("ex2 flatMapToInt_test");
         List<String> list2 = Arrays.asList("Geeks", "GFG", "GeeksforGeeks", "gfg");
+        System.out.println("list2: " + list2);
         list2.stream().flatMapToInt(str
                 -> IntStream.of(str.length()))
                 .forEach(System.out::println);
@@ -364,6 +386,7 @@ public class StreamEx {
         //ex1
         System.out.println("ex1 flatMapToLong_test");
         List<String> list = Arrays.asList("1", "2", "3", "4", "5");
+        System.out.println("list: " + list);
         list.stream().flatMapToLong(num ->
                 LongStream.of(Long.parseLong(num))).
                 forEach(System.out::println);
@@ -371,6 +394,7 @@ public class StreamEx {
         System.out.println("ex2 flatMapToLong_test");
         List<String> list2 = Arrays.asList("Geeks", "GFG",
                 "GeeksforGeeks", "gfg");
+        System.out.println("list2: " + list2);
         list2.stream().flatMapToLong(str ->
                 LongStream.of(str.length())).
                 forEach(System.out::println);
@@ -382,16 +406,24 @@ public class StreamEx {
         //이 스트림의 각 요소에 대해 작업을 수행합니다.
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
         String[] arr = {"1", "2", "3"};
-
+        System.out.println("//arr: " + Arrays.toString(arr));
         System.out.print("for: ");
+        for (String str : arr) {
+            System.out.print(str + " ");
+        }
+        System.out.println();
+
         int count = 0;
         String[] arr1 = {"Geeks", "For", "Geeks"};
+        System.out.println("//arr1: " + Arrays.toString(arr1));
+        System.out.print("for: ");
         for (String str : arr) {
             System.out.print(arr1[count++]);
         }
-
         System.out.println();
+
         List<String> list = Arrays.asList("A", "B", "C", "D");
+        System.out.println("//list: " + list);
         System.out.print("stream: ");
         list.forEach(System.out::print);
         System.out.println();
@@ -402,7 +434,7 @@ public class StreamEx {
         System.out.println();
     }
 
-//16
+    //16
     private static void forEachOrdered_test() {
         //스트림에 정의된 조우 순서가 있는 경우 스트림의 조우 순서대로 이 스트림의 각 요소에 대해 작업을 수행합니다.
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -421,7 +453,7 @@ public class StreamEx {
 
     }
 
-//17
+    //17
     private static void generate_test() {
         //제공된 공급자에 의해 각 요소가 생성되는 무한 순차 무순 스트림을 반환합니다.
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -435,13 +467,167 @@ public class StreamEx {
         System.out.println();
     }
 
-    private static void test() {
-        //
+    //18
+    private static void iterate_test() {
+        //초기 요소 시드에 함수 f를 반복적으로 적용하여 시드, f(시드), f(f(시드)) 등으로 구성된 스트림을 생성하여 생성된 무한 순차 순서 스트림을 반환합니다.
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
 
+        // Stream of 0 – 9
+        System.out.println("ex1 Stream of 0 – 9");
+        Stream.iterate(0, n -> n + 1)
+                .limit(10)
+                .forEach(x -> System.out.print(x + " "));
+        System.out.println();
+
+        System.out.println("ex2 Stream of odd numbers only.");
+        Stream.iterate(0, n -> n + 1)
+                .filter(x -> x % 2 != 0) //odd
+                .limit(10)
+                .forEach(x -> System.out.print(x + " "));
+        System.out.println();
+
+        System.out.println("ex3 A classic Fibonacci example.");
+        Stream.iterate(new int[]{0, 1}, n -> new int[]{n[1], n[0] + n[1]})
+                .limit(20)
+                .map(n -> n[0])
+                .forEach(x -> System.out.print(x + " "));
+        System.out.println();
+
+        System.out.println("ex4 Sum all the Fibonacci values.");
+        int sum = Stream.iterate(new int[]{0, 1}, n -> new int[]{n[1], n[0] + n[1]})
+                .limit(10)
+                .map(n -> n[0]) // Stream<Integer>
+                .mapToInt(n -> n)
+                .sum();
+        System.out.println("Fibonacci 10 sum : " + sum);
+        System.out.println();
+////
+        int result = 0;
+        int n = 11;
+        if (n == 0) result = 0; // 제 0항은 0을 반환한다.
+        else if (n == 1) result = 1; // 제 1항은 1을 반환한다.
+        else {
+            int iterA = 0;
+            int iterB = 1;
+            for (int i = 2; i <= n; i++) {
+                result = iterA + iterB;
+                iterA = iterB;
+                iterB = result;
+            } // n항의 값을 구한다.
+            System.out.println("original fibonacci result: " + result);
+            System.out.println();
+        }
+    }
+
+    //19
+    private static void limit_test() {
+        //이 스트림의 요소로 구성된 스트림을 반환하고 길이가 maxSize보다 길지 않도록 잘립니다.
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+        Stream<Integer> evenNumInfiniteStream = Stream.iterate(0, n -> n + 2);
+        List<Integer> newList = evenNumInfiniteStream.limit(10)
+                .collect(Collectors.toList());
+        System.out.println(newList);
+        System.out.println();
+    }
+
+    //20
+    private static void map_test() {
+        //지정된 함수를 이 스트림의 요소에 적용한 결과로 구성된 스트림을 반환합니다.
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
+        System.out.println("ex1 map_test");
+        List<Integer> list = Arrays.asList(3, 6, 9, 12, 15);
+        List<Integer> listx = list.stream().map(number -> number * 3)
+                .collect(Collectors.toList()); //collect 추가
+        //.forEach(System.out::println);
+        System.out.println(listx);
+
+        System.out.println("ex2 map_test");
+        List<String> list2 = Arrays.asList("geeks", "gfg", "g",
+                "e", "e", "k", "s");
+        List<String> answer = list2.stream().map(String::toUpperCase).
+                collect(Collectors.toList());
+        System.out.println(answer);
+        System.out.println();
+    }
+
+    //21
+    private static void mapToDouble_test() {
+        //이 스트림의 요소에 지정된 함수를 적용한 결과로 구성된 DoubleStream을 반환합니다.
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
+        System.out.println("ex1 mapToDouble_test");
+        List<String> list = Arrays.asList("10", "6.548", "9.12", "11", "15");
+        System.out.println("list: " + list);
+        list.stream().mapToDouble(num -> Double.parseDouble(num))
+                .filter(num -> (num * num) * 2 == 450)
+                .forEach(System.out::println);
+        System.out.println();
+
+        System.out.println("ex2 mapToDouble_test");
+        List<String> list2 = Arrays.asList("CSE", "JAVA", "gfg", "C++", "C");
+        System.out.println("list2: " + list2);
+        list2.stream().mapToDouble(str -> str.length() * str.length())
+                .forEach(System.out::println);
+        System.out.println();
+    }
+
+    //21
+    private static void mapToInt_test() {
+        //주어진 함수를 이 스트림의 요소에 적용한 결과로 구성된 IntStream을 반환합니다.
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+        List<String> list = Arrays.asList("3", "6", "8", "14", "15");
+        System.out.println("list: " + list);
+        list.stream().mapToInt(num -> Integer.parseInt(num))
+                .filter(num -> num % 3 == 0)
+                .forEach(System.out::println);
+        System.out.println();
+    }
+
+    //22
+    private static void mapToLong_test() {
+        //주어진 함수를 이 스트림의 요소에 적용한 결과로 구성된 LongStream을 반환합니다.
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+        List<String> list = Arrays.asList("25", "225", "1000", "20", "15");
+        System.out.println("list: " + list);
+        list.stream().mapToLong(num -> Long.parseLong(num))
+                .filter(num -> Math.sqrt(num) / 5 == 3)
+                .forEach(System.out::println);
+        System.out.println();
+    }
+
+    //23
+    private static void max_min_test() {
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+        //max
+        //제공된 Comparator에 따라 이 스트림의 최대 요소를 반환합니다.
+        List<Integer> list = Arrays.asList(-9, -18, 0, 25, 4);
+        System.out.println("list: " + list);
+        System.out.print("The maximum value is : ");
+        Integer var = list.stream().max(Integer::compare).get();
+        System.out.print(var);
+        System.out.println();
+        //min
+        //제공된 Comparator에 따라 이 스트림의 최소 요소를 반환합니다.
+        System.out.print("The minimum value is : ");
+        Integer var2 = list.stream().min(Integer::compare).get();
+        System.out.print(var2);
+        System.out.println();
+    }
+
+    //24
+    private static void noneMatch_test() {
+        //
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
 
         System.out.println();
     }
 
+    private static void test() {
+        //
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
+        System.out.println();
+    }
 
 }
