@@ -35,6 +35,12 @@ public class StreamEx {
         mapToLong_test();
         max_min_test();
         noneMatch_test();
+        of_test();
+        peek_test();
+        reduce_test();
+        skip_test();
+        sorted_test();
+        toArray_test();
 
         //>>>>>>
         //iterate
@@ -636,11 +642,183 @@ public class StreamEx {
         System.out.println();
     }
 
-    private static void test() {
-        //
+
+    //25
+    private static void of_test() {
+        //단일 요소를 포함하는 순차 스트림을 반환합니다.
+        //요소가 지정된 값인 순차 순서 스트림을 반환합니다.
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
 
+        System.out.println("ex1 of_test");
+        Stream.of("a1", "a2", "a3")
+                .findFirst()
+                .ifPresent(System.out::println); // a1
+
+        System.out.println("ex2 of_test");
+        Stream.of("a1", "a2", "a3")
+                .map(s -> s.substring(1))
+                .mapToInt(Integer::parseInt)
+                .max()
+                .ifPresent(System.out::println); // 3
+
+        System.out.println("ex3 of_test");
+        Stream.of(1.0, 2.0, 3.0)
+                .mapToInt(Double::intValue)
+                .mapToObj(i -> "a" + i)
+                .forEach(System.out::println); // a1 // a2 // a3
         System.out.println();
     }
 
+    //26
+    private static void peek_test() {
+        //이 스트림의 요소로 구성된 스트림을 반환하고 결과 스트림에서 요소가 소비될 때 각 요소에 대해 제공된 작업을 추가로 수행합니다.
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+        //peek without terminal operation.
+        System.out.println("ex1 peek_test List<Integer>");
+        List<Integer> list = Arrays.asList(0, 2, 4, 6, 8, 10);
+        list.stream().peek(System.out::println); // none
+        System.out.println();
+
+        //peek with terminal operation count.
+        list.stream().peek(System.out::println).count();
+        System.out.println();
+
+        //peek with terminal operation collect.
+        List<Integer> newList = list.stream().peek(System.out::println).collect(Collectors.toList());
+        System.out.println("newList: " + newList);
+        System.out.println();
+
+
+        System.out.println("ex2 peek_test List<String>");
+        List<String> list2 = Arrays.asList("a", "b", "c", "d", "c");
+        list2.stream().peek(System.out::println); // none
+        System.out.println();
+
+        //peek with terminal operation count.
+        list2.stream().peek(System.out::println).count();
+        System.out.println();
+
+        //peek with terminal operation collect.
+        List<String> newList2 = list2.stream().peek(System.out::println).collect(Collectors.toList());
+        System.out.println("newList2: " + newList2);
+        System.out.println();
+    }
+
+    //27
+    private static void reduce_test() {
+        //연관 누적 함수를 사용하여 이 스트림의 요소에 대한 축소를 수행하고 축소된 값이 있는 경우 이를 설명하는 Optional을 반환합니다.
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
+
+        System.out.println("//reduce(BinaryOperator<T> accumulator)");
+        List<String> words = Arrays.asList("GFG", "Geeks", "for", "GeeksQuiz", "GeeksforGeeks");
+        System.out.println("words: " + words);
+        System.out.println("// returns the longer String.");
+        Optional<String> longestString = words.stream()
+                .reduce((word1, word2)
+                        -> word1.length() > word2.length()
+                        ? word1 : word2);
+        longestString.ifPresent(System.out::println); //GeeksforGeeks
+        System.out.println("//to get the combined String");
+        String[] array = {"Geeks", "for", "Geeks"};
+        Optional<String> String_combine = Arrays.stream(array)
+                .reduce((str1, str2)
+                        -> str1 + "-" + str2);
+        if (String_combine.isPresent()) {
+            System.out.println(String_combine.get()); //Geeks-for-Geeks
+        }
+        System.out.println("//to get the sum of all elements");
+        List<Integer> array2 = Arrays.asList(-2, 0, 4, 6, 8);
+        System.out.println("array2: " + array2);
+        int sum = array2.stream().reduce(0,
+                (element1, element2) -> element1 + element2);
+        System.out.println("The sum of all elements is " + sum); //The sum of all elements is 16
+        System.out.println();
+        System.out.println("//");
+
+        //제공된 ID 값과 연관 누적 함수를 사용하여 이 스트림의 요소에 대한 축소를 수행하고 축소된 값을 반환합니다.
+        System.out.println("//reduce(T identity, BinaryOperator<T> accumulator");
+        List<Integer> numbers2 = Arrays.asList(1, 2, 3, 4, 5);
+        int sum2 = numbers2.stream()
+                .reduce(0, Integer::sum);
+        System.out.println(sum2);
+        System.out.println("//");
+        //제공된 ID, 누적 및 결합 기능을 사용하여 이 스트림의 요소에 대한 축소를 수행합니다.
+        System.out.println("reduce(U identity, BiFunction<U,? super T,U> accumulator, BinaryOperator<U> combiner)");
+        List<Integer> numbers3 = Arrays.asList(1, 2, 3, 4, 5);
+        double sum3 = numbers3
+                .parallelStream()
+                .reduce(0.0, (partialSum, a) -> partialSum + a, Double::sum);
+        System.out.println(sum);
+        System.out.println();
+    }
+
+    //28
+    private static void skip_test() {
+        //스트림의 처음 n개 요소를 버린 후 이 스트림의 나머지 요소로 구성된 스트림을 반환합니다.
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+//        //skip은 limit과 반대입니다.
+        List<String> list =
+                Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
+        System.out.println("list: " + list);
+        list.stream().skip(5).forEach(System.out::println);
+        System.out.println();
+    }
+
+    //29
+    private static void sorted_test() {
+        //이 스트림의 요소로 구성된 스트림을 자연 순서에 따라 정렬하여 반환합니다.
+        //제공된 Comparator에 따라 정렬된 이 스트림의 요소로 구성된 스트림을 반환합니다.
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
+        List<String> langs =
+                Arrays.asList("java", "kotlin", "haskell", "ruby", "smalltalk");
+        System.out.println("//langs: " + langs);
+        System.out.println("~sorted:");
+        langs.stream().sorted()
+                .forEach(System.out::println);
+        System.out.println();
+        System.out.println("~reversed:");
+        langs.stream().sorted(Comparator.reverseOrder())
+                .forEach(System.out::println);
+        System.out.println();
+
+        List<Integer> numbers = Arrays.asList(5, -10, 7, -18, 23);
+        System.out.println("//numbers: " + numbers);
+        System.out.println("~sorted: ");
+        numbers.stream().sorted().
+                forEach(System.out::println);
+        System.out.println();
+        System.out.println("~reversed: ");
+        numbers.stream().sorted(Comparator.reverseOrder()).
+                forEach(System.out::println);
+        System.out.println();
+    }
+
+    //30
+    private static void toArray_test() {
+        //이 스트림의 요소를 포함하는 배열을 반환합니다.
+        System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+        Stream<Integer> stream = Stream.of(5, 6, 7, 8, 9, 10);
+        System.out.println("stream: " + stream);
+        Object[] arr = stream.toArray();
+        System.out.println(Arrays.toString(arr));
+        //
+        Stream<String> stream2 = Stream.of("Geeks", "for",
+                "Geeks", "GeeksQuiz");
+        System.out.println("stream2: " + stream2);
+        Object[] arr2 = stream2.toArray();
+        System.out.println(Arrays.toString(arr2));
+        //
+        int[] num = {1, 2, 3, 4, 5};
+        System.out.println("num: " + Arrays.toString(num));
+        Integer[] result = Arrays.stream(num)
+                .map(x -> x * 2)
+                .boxed()
+                .toArray(Integer[]::new);
+        System.out.println(Arrays.asList(result));
+        System.out.println();
+    }
 }
+
+
