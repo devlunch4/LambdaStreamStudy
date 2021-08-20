@@ -34,6 +34,7 @@ public class StreamEx {
         mapToInt_test();
         mapToLong_test();
         max_min_test();
+        noneMatch_test();
 
         //>>>>>>
         //iterate
@@ -617,9 +618,21 @@ public class StreamEx {
 
     //24
     private static void noneMatch_test() {
-        //
+        //이 스트림의 요소가 제공된 술어와 일치하지 않는지 여부를 반환합니다.
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
+        System.out.println("ex1 noneMatch_test: To check that there is no string of length 4.");
+        Stream<String> stream = Stream.of("CSE", "C++", "Jav", "DS");
+        boolean answer = stream.noneMatch(str -> (str.length() == 4));
+        System.out.println(answer);
+        System.out.println();
 
+        System.out.println("ex2 noneMatch_test: To check that there is no element with required characters at required position.");
+        Stream<String> stream2 = Stream.of("Geeks", "fOr", "GEEKSQUIZ", "GeeksforGeeks", "CSe");
+        boolean answer2 = stream2.noneMatch
+                (str -> Character.isUpperCase(str.charAt(1))
+                        && Character.isLowerCase(str.charAt(2))
+                        && str.charAt(0) == 'f');
+        System.out.println(answer2);
         System.out.println();
     }
 
