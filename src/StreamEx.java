@@ -308,10 +308,11 @@ public class StreamEx {
                 .filter(s -> s.startsWith("b")).findFirst();
         System.out.println("findFirst: " + firstElement.get());
 
+        //10-2
         //findFirst() vs findAny()
         //Stream을 직렬로 처리할 때 findFirst()와 findAny()는 동일한 요소를 리턴하며, 차이점이 없습니다.
         //하지만 Stream을 병렬로 처리할 때는 차이가 있습니다.
-        //findFirst()는 여러 요소가 조건에 부합해도 Stream의 순서를 고려하여 가장 앞에 있는 요소를 리턴합니다.
+        //findFirst()는 여러 요소가 조건에 부합해도 Stream의 순서를 고려하여 가장 앞에S 있는 요소를 리턴합니다.
         //반면에 findAny()는 Multi thread에서 Stream을 처리할 때 가장 먼저 찾은 요소를 리턴합니다. 따라서 Stream의 뒤쪽에 있는 element가 리턴될 수 있습니다.
 
         //아래 코드는 Stream을 병렬(parallel())로 처리할 때, findFirst()를 사용하는 예제입니다. 여기서 findFirst()는 항상 b를 리턴합니다.
