@@ -107,14 +107,8 @@ public class StreamEx {
     //4
     private static void collect_test() { //https://www.baeldung.com/java-8-collectors
         //Collector를 사용하여 이 스트림의 요소에 대해 변경 가능한 축소 작업을 수행합니다.
-
-
         //Collect는 다음과 같은 기능들을 제공합니다.
-
-        //-스트림의 아이템들을 List 또는 Set 자료형으로 변환
-        //-스트림의 아이템들을 joining
-        //-스트림의 아이템들을 Sorting하여 가장 큰 객체 리턴
-        //-스트림의 아이템들의 평균 값을 리턴
+        //-스트림의 아이템들을 List 또는 Set 자료형으로 변환 / joining / Sorting하여 가장 큰 객체 리턴/ 평균 값을 리턴
 
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
         //Stream의 아이템들을 HashSet으로 리턴
@@ -131,6 +125,8 @@ public class StreamEx {
         for (String s : fruitSet) {
             System.out.println(s);
         }
+
+        //4-2
         //Stream의 아이템들을 List 객체로 리턴
         System.out.println("//Stream의 아이템들을 List 객체로 리턴");
         Stream<String> fruits3 = Stream.of("banana", "apple", "mango", "kiwi", "peach", "cherry", "lemon");
@@ -148,7 +144,6 @@ public class StreamEx {
         Stream<String> fruits5 = Stream.of("banana", "apple", "mango", "kiwi", "peach", "cherry", "lemon");
         String result5 = fruits5.map(Object::toString).collect(Collectors.joining(", "));
         System.out.println(result5);
-
         // 가장 큰 객체 1개만 리턴하기(길이)
         System.out.println("// 가장 큰 객체 1개만 리턴하기(길이)");
         Stream<String> fruits6 = Stream.of("banana", "apple", "mango", "kiwi", "peach", "cherry", "lemon");
@@ -156,12 +151,13 @@ public class StreamEx {
         Optional<String> result6 = fruits6.map(Object::toString).collect(maxBy(comparing(getCount)));
         System.out.println("result: " + result6.orElse("no item"));
 
+
+        //4-3
         //Collectors로 평균 값 구하기
         System.out.println("// Collectors로 평균 값 구하기");
         List<Integer> list = Arrays.asList(1, 2, 3, 4);
         Double avg_result = list.stream().collect(Collectors.averagingInt(v -> v * 2));
         System.out.println("Average: " + avg_result);
-
         //Custom 객체에 Collect 적용하기
         System.out.println("//Custom 객체에 Collect 적용하기");
         Stream<Fruit> fruits7 = Stream.of(new Fruit("1", "banana"), new Fruit("2", "apple"),
@@ -173,6 +169,7 @@ public class StreamEx {
             System.out.println("key: " + key + ", value: " + map.get(key));
         }
 
+        //4-4
         //toMap 수행시, 동일한 Key에 대한 예외처리
         //아래 코드는 기존에 등록된 값을 사용하도록 (existingValue, newValue) -> existingValue)로 정의 했습니다.
         //(코드를 보면 key 5를 갖고 있는 데이터가 두개 있습니다.)
@@ -187,7 +184,7 @@ public class StreamEx {
         for (String key : map2.keySet()) {
             System.out.println("key: " + key + ", value: " + map2.get(key));
         }
-
+        //4-5
         //이번에는 동일 key를 갖고 있는 데이터가 있을 때, 두개의 값을 합하여 저장하도록 정의할 수 있습니다.
         // 3번째 param으로, 두개의 값을 더한 값을 리턴하는 함수를 정의하면 됩니다.
         System.out.println("//toMap 수행시, 동일한 Key에 대한 예외처리 2. 두개 더한값 사용");
@@ -250,7 +247,7 @@ public class StreamEx {
         List<String> words = Arrays.asList("book", "desk", "keyboard", "mouse", "cup");
         System.out.println("words: " + words);
         int count = (int) words.stream().filter(w -> w.contains("o")).count();
-        System.out.println("count >" + count);
+        System.out.println("count : " + count);
         System.out.println();
     }
 
