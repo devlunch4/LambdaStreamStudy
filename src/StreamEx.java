@@ -351,14 +351,14 @@ public class StreamEx {
         List<String> list = Arrays.asList("1.5", "2.7", "3", "4", "5.6");
         System.out.println("list: " + list);
         list.stream().flatMapToDouble(num
-                -> DoubleStream.of(Double.parseDouble(num)))
+                        -> DoubleStream.of(Double.parseDouble(num)))
                 .forEach(System.out::println);
         //ex2
         System.out.println("ex2 flatMapToDouble_test");
         List<String> list2 = Arrays.asList("Geeks", "GFG", "GeeksforGeeks", "gfg");
         System.out.println("list2: " + list2);
         list2.stream().flatMapToDouble(str
-                -> DoubleStream.of(str.length()))
+                        -> DoubleStream.of(str.length()))
                 .forEach(System.out::println);
         System.out.println();
     }
@@ -372,14 +372,14 @@ public class StreamEx {
         List<String> list = Arrays.asList("1", "2", "3", "4", "5");
         System.out.println("list: " + list);
         list.stream().flatMapToInt(num
-                -> IntStream.of(Integer.parseInt(num)))
+                        -> IntStream.of(Integer.parseInt(num)))
                 .forEach(System.out::println);
         //ex2
         System.out.println("ex2 flatMapToInt_test");
         List<String> list2 = Arrays.asList("Geeks", "GFG", "GeeksforGeeks", "gfg");
         System.out.println("list2: " + list2);
         list2.stream().flatMapToInt(str
-                -> IntStream.of(str.length()))
+                        -> IntStream.of(str.length()))
                 .forEach(System.out::println);
         System.out.println();
     }
@@ -393,7 +393,7 @@ public class StreamEx {
         List<String> list = Arrays.asList("1", "2", "3", "4", "5");
         System.out.println("list: " + list);
         list.stream().flatMapToLong(num ->
-                LongStream.of(Long.parseLong(num))).
+                        LongStream.of(Long.parseLong(num))).
                 forEach(System.out::println);
         //ex2
         System.out.println("ex2 flatMapToLong_test");
@@ -401,7 +401,7 @@ public class StreamEx {
                 "GeeksforGeeks", "gfg");
         System.out.println("list2: " + list2);
         list2.stream().flatMapToLong(str ->
-                LongStream.of(str.length())).
+                        LongStream.of(str.length())).
                 forEach(System.out::println);
         System.out.println();
     }
@@ -455,7 +455,6 @@ public class StreamEx {
         stream.flatMap(str -> Stream.of(str.charAt(2)))
                 .forEachOrdered(System.out::println);
         System.out.println();
-
     }
 
     //17
@@ -577,7 +576,7 @@ public class StreamEx {
         System.out.println();
     }
 
-    //21
+    //22
     private static void mapToInt_test() {
         //주어진 함수를 이 스트림의 요소에 적용한 결과로 구성된 IntStream을 반환합니다.
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -589,7 +588,7 @@ public class StreamEx {
         System.out.println();
     }
 
-    //22
+    //23
     private static void mapToLong_test() {
         //주어진 함수를 이 스트림의 요소에 적용한 결과로 구성된 LongStream을 반환합니다.
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -601,7 +600,7 @@ public class StreamEx {
         System.out.println();
     }
 
-    //23
+    //24
     private static void max_min_test() {
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
         //max
@@ -618,20 +617,23 @@ public class StreamEx {
         Integer var2 = list.stream().min(Integer::compare).get();
         System.out.print(var2);
         System.out.println();
+        System.out.println();
     }
 
-    //24
+    //25
     private static void noneMatch_test() {
         //이 스트림의 요소가 제공된 술어와 일치하지 않는지 여부를 반환합니다.
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
         System.out.println("ex1 noneMatch_test: To check that there is no string of length 4.");
         Stream<String> stream = Stream.of("CSE", "C++", "Jav", "DS");
+        System.out.println("stream: " + "Stream.of(\"SE\", \"C++\", \"Jav\", \"DS\")");
         boolean answer = stream.noneMatch(str -> (str.length() == 4));
         System.out.println(answer);
         System.out.println();
 
         System.out.println("ex2 noneMatch_test: To check that there is no element with required characters at required position.");
         Stream<String> stream2 = Stream.of("Geeks", "fOr", "GEEKSQUIZ", "GeeksforGeeks", "CSe");
+        System.out.println("stream2: " + "Stream.of(\"Geeks\", \"fOr\", \"GEEKSQUIZ\", \"GeeksforGeeks\", \"CSe\")");
         boolean answer2 = stream2.noneMatch
                 (str -> Character.isUpperCase(str.charAt(1))
                         && Character.isLowerCase(str.charAt(2))
@@ -641,7 +643,7 @@ public class StreamEx {
     }
 
 
-    //25
+    //26
     private static void of_test() {
         //단일 요소를 포함하는 순차 스트림을 반환합니다.
         //요소가 지정된 값인 순차 순서 스트림을 반환합니다.
@@ -667,7 +669,7 @@ public class StreamEx {
         System.out.println();
     }
 
-    //26
+    //27
     private static void peek_test() {
         //이 스트림의 요소로 구성된 스트림을 반환하고 결과 스트림에서 요소가 소비될 때 각 요소에 대해 제공된 작업을 추가로 수행합니다.
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -702,7 +704,7 @@ public class StreamEx {
         System.out.println();
     }
 
-    //27
+    //28
     private static void reduce_test() {
         //연관 누적 함수를 사용하여 이 스트림의 요소에 대한 축소를 수행하고 축소된 값이 있는 경우 이를 설명하는 Optional을 반환합니다.
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -751,7 +753,7 @@ public class StreamEx {
         System.out.println();
     }
 
-    //28
+    //29
     private static void skip_test() {
         //스트림의 처음 n개 요소를 버린 후 이 스트림의 나머지 요소로 구성된 스트림을 반환합니다.
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -763,7 +765,7 @@ public class StreamEx {
         System.out.println();
     }
 
-    //29
+    //30
     private static void sorted_test() {
         //이 스트림의 요소로 구성된 스트림을 자연 순서에 따라 정렬하여 반환합니다.
         //제공된 Comparator에 따라 정렬된 이 스트림의 요소로 구성된 스트림을 반환합니다.
@@ -793,7 +795,7 @@ public class StreamEx {
         System.out.println();
     }
 
-    //30
+    //31
     private static void toArray_test() {
         //이 스트림의 요소를 포함하는 배열을 반환합니다.
         System.out.println("***" + Thread.currentThread().getStackTrace()[1].getMethodName());
